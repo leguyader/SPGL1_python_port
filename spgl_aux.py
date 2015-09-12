@@ -1,72 +1,10 @@
 import numpy as np
 from oneProjector import oneProjector
 
-def spgSetParms(inputdictionary):
+def spgSetParms(inputdictionary,defaultopts):
 # %SPGSETPARMS  Set options for SPGL1
-# %
-# %   options = spgSetParms('param1',val1,'param2',val2,...) creates an
-# %   options structure in which the named parameters have the specified
-# %   values.  Unspecified parameters are empty and their default
-# %   values are used.
-# %
-# %   spgSetParms with no input arguments and no output arguments
-# %   displays all parameter names and their possible values.
-# %
-# %   options = spgSetParms (with no input arguments) creates an options
-# %   structure where all the fields are empty.
-# %
-# %   spgSetParms.m
-# %   $Id: spgSetParms.m 1407 2009-06-30 20:00:54Z ewout78 $
 
-# % Print out possible values of properties.
-    if not inputdictionary:
-        print(' Default parameters for l1Set.m:')
-        print('        fid : [ positive integer        |     1 ]')
-        print('  verbosity : [ integer: 1, 2, or 3     |     3 ]')
-        print(' iterations : [ positive integer        |  10*m ]')
-        print('  nPrevVals : [ positive integer        |    10 ]')
-        print('      bpTol : [ positive scalar         | 1e-06 ]')
-        print('      lsTol : [ positive scalar         | 1e-06 ]')
-        print('     optTol : [ positive scalar         | 1e-04 ]')
-        print('     decTol : [ positive scalar         | 1e-04 ]')
-        print('    stepMin : [ positive scalar         | 1e-16 ]')
-        print('    stepMax : [ positive scalar         | 1e+05 ]')
-        print(' rootMethod : [ 1=linear, 2=quadratic   |     2 ]')
-        print('activeSetIt : [ positive integer        |   Inf ]')
-        print('subspaceMin : [ 0=no, 1=yes             |     0 ]')
-        print('  iscomplex : [ 0=no, 1=yes, NaN=auto   |   NaN ]')
-        print('  maxMatvec : [ positive integer        |   Inf ]')
-        print('    weights : [ vector                  |     1 ]')
-        print('    project : [ projection function     |    @()]')
-        print('primal_norm : [ primal norm eval fun    |    @()]')
-        print('  dual_norm : [ dual norm eval fun      |    @()]')
-        print('')
-        return
-
-    Names = [
-      'fid',\
-      'verbosity',\
-      'iterations',\
-      'nPrevVals',\
-      'bpTol',\
-      'lsTol',\
-      'optTol',\
-      'decTol',\
-      'stepMin',\
-      'stepMax',\
-      'rootMethod',\
-      'activeSetIt',\
-      'subspaceMin',\
-      'iscomplex',\
-      'maxMatvec',\
-      'weights',\
-      'project',\
-      'primal_norm',\
-      'dual_norm',\
-    ]
-
-    # % Combine all leading options structures o1, o2, ... in l1Set(o1,o2,...).
-    options = {xx:[] for xx in Names}
+    options = defaultopts
 
     for arg in inputdictionary:
         if arg in options:
@@ -177,7 +115,7 @@ def NormL1NN_dual(x,weights):
 # % Dual of non-negative L1 gauge function
     xx = x.copy()
     xx[xx<0]=0
-    return np.linalg.norm(xx/weights,inf)
+    return np.linalg.norm(xx/weights,np.inf)
 
 def spgLineCurvy(x,g,fMax,Aprod,b,spglproject,weights,tau):
 

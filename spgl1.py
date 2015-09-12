@@ -211,7 +211,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     # %----------------------------------------------------------------------
     # % Grab input options and set defaults where needed.
     # %----------------------------------------------------------------------
-    defaultopts = spgSetParms({
+    defaultopts = {
     'fid'        :      1 , # File ID for output
     'verbosity'  :      2 , # Verbosity level
     'iterations' :   10*m , # Max number of iterrations
@@ -231,8 +231,8 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     'project'    : NormL1_project ,
     'primal_norm': NormL1_primal  ,
     'dual_norm'  : NormL1_dual
-       })
-    options = spgSetParms(defaultopts);
+       }
+    options = spgSetParms(options,defaultopts);
 
     # fid           = options['fid']
     # logLevel      = options['verbosity']
@@ -249,7 +249,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     maxMatvec     = max(3,options['maxMatvec'])
     weights       = options['weights']
 
-    maxLineErrors = 10     #% Maximum number of line-search failures.
+    maxLineErrors = 20     #% Maximum number of line-search failures.
     pivTol        = 1e-12  #% Threshold for significant Newton step.
 
     # %----------------------------------------------------------------------
@@ -272,7 +272,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     subspace      = False              #% Flag if did subspace min in current itn.
     stepG         = 1                  #% Step length for projected gradient.
     testUpdateTau = 0                  #% Previous step did not update tau
-
+    
     #% Determine initial x, vector length n, and see if problem is complex
     from inspect import isfunction
     explicit = not isfunction(A)
@@ -300,7 +300,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     #% versions we also checked if the number of weights was equal to
     #% n. In the case of multiple measurement vectors, this no longer
     #% needs to apply, so the check was removed.
-    if weights:
+    if weights is not None:
         if not np.isfinite(weights).all():
             print('SPGL1 ERROR: Entries in options.weights must be finite')
         if np.any(weights <= 0):
@@ -370,9 +370,9 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     # end
 
     #% Project the starting point and evaluate function and gradient.
-
+ 
     spglproject=options['project']
-
+ 
     x         = spglproject(x,weights,tau)
     r         = b - Aprod(x,1)  #% r = b - Ax
     g         =   - Aprod(r,2)  #% g = -A'r
@@ -705,7 +705,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     # printf(' #%-20s:  #%6i #%6s #%-20s:  #%6i\n', ...
     #    'Line search its',nLineTot,'','Subspace iterrations',itnTotLSQR);
     # printf('\n');
-
+    
     return x,r,g,info
 
 

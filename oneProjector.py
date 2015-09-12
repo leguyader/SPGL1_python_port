@@ -48,8 +48,8 @@ def oneProjectorMex_D(b,d,tau):
     b  = b[idx]
     d  = d[idx]
 
-    csdb = cumsum(d*b)
-    csd2 = cumsum(d*d)
+    csdb = np.cumsum(d*b)
+    csd2 = np.cumsum(d*d)
     alpha1 = (csdb-tau)/csd2
     alpha2 = b/d
     ggg = np.where(alpha1>=alpha2)
@@ -88,7 +88,7 @@ def oneProjector(b,d=[],tau=-1):
         tau = d
         d   = []
 
-    if not d:
+    if not d.any():
         d=1
 
     if not np.isscalar(d) and np.size(b) != np.size(d):
