@@ -233,7 +233,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     'dual_norm'  : NormL1_dual
        }
     options = spgSetParms(options,defaultopts);
-
+    
     # fid           = options['fid']
     # logLevel      = options['verbosity']
     maxIts        = options['iterations']
@@ -249,7 +249,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
     maxMatvec     = max(3,options['maxMatvec'])
     weights       = options['weights']
 
-    maxLineErrors = 20     #% Maximum number of line-search failures.
+    maxLineErrors = 10     #% Maximum number of line-search failures.
     pivTol        = 1e-12  #% Threshold for significant Newton step.
 
     # %----------------------------------------------------------------------
@@ -496,9 +496,9 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
         subspace = False
 
         #% Update history info
-        xNorm1[iterr] = options['primal_norm'](x,weights)
-        rNorm2[iterr] = rNorm
-        lambdaa[iterr] = gNorm
+        #xNorm1[iterr] = options['primal_norm'](x,weights)
+        #rNorm2[iterr] = rNorm
+        #lambdaa[iterr] = gNorm
 
         if stat:
             break

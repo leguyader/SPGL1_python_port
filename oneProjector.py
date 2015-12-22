@@ -87,9 +87,10 @@ def oneProjector(b,d=[],tau=-1):
             return
         tau = d
         d   = []
-
-    if not d.any():
-        d=1
+        
+    #print d    
+    #if not d:
+    #    d=1
 
     if not np.isscalar(d) and np.size(b) != np.size(d):
         print('ERROR: oneProjector: Vectors b and d must have the same length')
