@@ -413,3 +413,6 @@ def spgldemoo():
     # print([repmat('-',1,35), ' Solution ', repmat('-',1,35), '\n']);
     # print('See figure 1(g).\n');
     # print([repmat('-',1,80), '\n']);
+
+if __name__ == '__main__':
+    spgldemoo()
