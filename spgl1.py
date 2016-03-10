@@ -40,7 +40,7 @@ def Aprodprelambda(A,x,mode):
         else:
             return A(x,2)
 
-def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
+def spgl1( A, b, tau=[], sigma=[], x=[], options={} ):
 # %SPGL1  Solve basis pursuit, basis pursuit denoise, and LASSO
 # %
 # % [x, r, g, info] = spgl1(A, b, tau, sigma, x0, options)
@@ -208,31 +208,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
             tau = 0
         singleTau = False
 
-    # %----------------------------------------------------------------------
-    # % Grab input options and set defaults where needed.
-    # %----------------------------------------------------------------------
-    defaultopts = {
-    'fid'        :      1 , # File ID for output
-    'verbosity'  :      2 , # Verbosity level
-    'iterations' :   10*m , # Max number of iterrations
-    'nPrevVals'  :      3 , # Number previous func values for linesearch
-    'bpTol'      :  1e-06 , # Tolerance for basis pursuit solution
-    'lsTol'      :  1e-06 , # Least-squares optimality tolerance
-    'optTol'     :  1e-04 , # Optimality tolerance
-    'decTol'     :  1e-04 , # Reqd rel. change in primal obj. for Newton
-    'stepMin'    :  1e-16 , # Minimum spectral step
-    'stepMax'    :  1e+05 , # Maximum spectral step
-    'rootMethod' :      2 , # Root finding method: 2=quad,1=linear (not used).
-    'activeSetIt':    np.inf , # Exit with EXIT_ACTIVE_SET if nnz same for # its.
-    'subspaceMin':      0 , # Use subspace minimization
-    'iscomplex'  :    np.nan , # Flag set to indicate complex problem
-    'maxMatvec'  :    np.inf , # Maximum matrix-vector multiplies allowed
-    'weights'    :      1 , # Weights W in ||Wx||_1
-    'project'    : NormL1_project ,
-    'primal_norm': NormL1_primal  ,
-    'dual_norm'  : NormL1_dual
-       }
-    options = spgSetParms(options,defaultopts);
+    options = spgSetParms(options, spgSetParms({'iterations':10*m}))
     
     # fid           = options['fid']
     # logLevel      = options['verbosity']
@@ -711,7 +687,7 @@ def spgl1( A, b, tau=[], sigma=[], x=[], options=[] ):
 
 
 
-def spg_bp(A,b,options=[] ):
+def spg_bp(A,b,options={} ):
 # %SPG_BP  Solve the basis pursuit (BP) problem
 # %
 # %   SPG_BP is designed to solve the basis pursuit problem
@@ -754,7 +730,7 @@ def spg_bp(A,b,options=[] ):
     return x,r,g,info
 
 
-def spg_bpdn( A, b, sigma, options=[] ):
+def spg_bpdn( A, b, sigma, options={} ):
 # %SPG_BPDN  Solve the basis pursuit denoise (BPDN) problem
 # %
 # %   SPG_BPDN is designed to solve the basis pursuit denoise problem
@@ -795,7 +771,7 @@ def spg_bpdn( A, b, sigma, options=[] ):
     return spgl1(A,b,tau,sigma,x0,options)
 
 
-def spg_lasso(A,b,tau,options=[] ):
+def spg_lasso(A,b,tau,options={} ):
     # %SPG_LASSO  Solve the LASSO problem
     # %
     # %   SPG_LASSO is designed to solve the LASSO problem

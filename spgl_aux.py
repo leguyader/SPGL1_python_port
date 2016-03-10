@@ -1,19 +1,6 @@
 import numpy as np
 from oneProjector import oneProjector
 
-def spgSetParms(inputdictionary,defaultopts):
-# %SPGSETPARMS  Set options for SPGL1
-
-    options = defaultopts
-
-    for arg in inputdictionary:
-        if arg in options:
-            options[arg]=inputdictionary[arg]
-        else:
-            print('ERROR PARAMETER SETTING: INCORRECT PARAMETER: '+arg)
-
-    return options
-
 # NOT OPTIMIZED
 def NormL12_project(g,x,weights,tau):
     m = round(np.size(x) / g)
@@ -116,6 +103,43 @@ def NormL1NN_dual(x,weights):
     xx = x.copy()
     xx[xx<0]=0
     return np.linalg.norm(xx/weights,np.inf)
+
+# %----------------------------------------------------------------------
+# % Grab input options and set defaults where needed.
+# %----------------------------------------------------------------------
+defaultopts = {
+    'fid'        :      1 , # File ID for output
+    'verbosity'  :      2 , # Verbosity level
+    'iterations' :     -1 , # Max number of iterrations, default set at 10*m in spgl1.py 
+    'nPrevVals'  :      3 , # Number previous func values for linesearch
+    'bpTol'      :  1e-06 , # Tolerance for basis pursuit solution
+    'lsTol'      :  1e-06 , # Least-squares optimality tolerance
+    'optTol'     :  1e-04 , # Optimality tolerance
+    'decTol'     :  1e-04 , # Reqd rel. change in primal obj. for Newton
+    'stepMin'    :  1e-16 , # Minimum spectral step
+    'stepMax'    :  1e+05 , # Maximum spectral step
+    'rootMethod' :      2 , # Root finding method: 2=quad,1=linear (not used).
+    'activeSetIt':    np.inf , # Exit with EXIT_ACTIVE_SET if nnz same for # its.
+    'subspaceMin':      0 , # Use subspace minimization
+    'iscomplex'  :    np.nan , # Flag set to indicate complex problem
+    'maxMatvec'  :    np.inf , # Maximum matrix-vector multiplies allowed
+    'weights'    :      1 , # Weights W in ||Wx||_1
+    'project'    : NormL1_project ,
+    'primal_norm': NormL1_primal  ,
+    'dual_norm'  : NormL1_dual
+}
+
+def spgSetParms(inputdictionary={}, options=defaultopts):
+# %SPGSETPARMS  Set options for SPGL1
+
+    for k,v in inputdictionary.items():
+        if k in options:
+            options[k] = v
+        else:
+            print('ERROR PARAMETER SETTING: INCORRECT PARAMETER: '+k)
+
+    return options
+
 
 def spgLineCurvy(x,g,fMax,Aprod,b,spglproject,weights,tau):
 
